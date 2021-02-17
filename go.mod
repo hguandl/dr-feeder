@@ -1,0 +1,9 @@
+module github.com/hguandl/arknights-news-watcher/v2
+
+go 1.15
+
+require (
+	github.com/antchfx/htmlquery v1.2.3
+	github.com/gocolly/colly/v2 v2.1.0
+	gopkg.in/yaml.v2 v2.4.0
+)
