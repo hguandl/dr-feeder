@@ -12,3 +12,7 @@ notifiers:
   agentid: 1000002
   corpsecret: "rhodesisland"
   touser: "@all"
+- type: bark
+  tokens:
+    - "qwertyuiop"
+    - "asdfghjkl"

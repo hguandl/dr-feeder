@@ -65,6 +65,13 @@ func ParseConfig(path string) ([]notifier.Notifier, error) {
 			} else {
 				err = fmt.Errorf("Cannot parse notifier #%d", idx)
 			}
+		case "bark":
+			ntf, ok := notifier.FromBarkNotifierConfig(ntfc)
+			if ok {
+				ret = append(ret, ntf)
+			} else {
+				err = fmt.Errorf("Cannot parse notifier #%d", idx)
+			}
 		default:
 			err = fmt.Errorf("Unknown notifier type \"%s\"", ntft)
 		}
