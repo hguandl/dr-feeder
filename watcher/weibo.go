@@ -54,7 +54,7 @@ type weiboWatcher struct {
 }
 
 func NewWeiboWatcher(uid int64) (Watcher, error) {
-	var watcher weiboWatcher
+	watcher := new(weiboWatcher)
 	watcher.uid = uint64(uid)
 	watcher.updateTime = time.Now().UTC()
 	err := watcher.setup()
@@ -129,6 +129,7 @@ func (watcher *weiboWatcher) update() bool {
 				dateTime, err = time.Parse(time.RubyDate, card.Mblog.CreatedAt)
 				if dateTime.After(watcher.updateTime) {
 					ret = true
+					watcher.updateTime = dateTime
 					watcher.latestMblog = card.Mblog
 				}
 			}
@@ -157,6 +158,9 @@ func (watcher weiboWatcher) parseContent() common.NotifyPayload {
 
 	texts := ""
 	for _, node := range nodes {
+		if node.Data == "#明日方舟#" {
+			continue
+		}
 		texts += strings.Trim(node.Data, " ")
 	}
 
@@ -167,7 +171,7 @@ func (watcher weiboWatcher) parseContent() common.NotifyPayload {
 	}
 }
 
-func (watcher weiboWatcher) Produce(ch chan common.NotifyPayload) {
+func (watcher *weiboWatcher) Produce(ch chan common.NotifyPayload) {
 	if watcher.update() {
 		log.Printf("New Weibo from \"%s\"...\n", watcher.name)
 		ch <- watcher.parseContent()

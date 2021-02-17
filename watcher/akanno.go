@@ -34,7 +34,7 @@ type akAnnounceWatcher struct {
 }
 
 func NewAkAnnounceWatcher() (Watcher, error) {
-	var watcher akAnnounceWatcher
+	watcher := new(akAnnounceWatcher)
 	watcher.name = "明日方舟客户端公告"
 	err := watcher.setup()
 	return watcher, err
@@ -104,7 +104,7 @@ func (watcher akAnnounceWatcher) parseContent() common.NotifyPayload {
 	}
 }
 
-func (watcher akAnnounceWatcher) Produce(ch chan common.NotifyPayload) {
+func (watcher *akAnnounceWatcher) Produce(ch chan common.NotifyPayload) {
 	if watcher.update() {
 		log.Printf("New post from \"%s\"...\n", watcher.name)
 		ch <- watcher.parseContent()

@@ -31,7 +31,7 @@ func (notifer customNotifer) Push(payload common.NotifyPayload) {
 	_, err := http.PostForm(notifer.apiURL,
 		url.Values{
 			"title": {payload.Title},
-			"body":  {payload.Body},
+			"body":  {payload.Body[:128]},
 			"url":   {payload.URL},
 		})
 	if err != nil {
