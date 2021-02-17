@@ -13,7 +13,7 @@ import (
 func consume(ch chan common.NotifyPayload, notifiers []notifier.Notifier) {
 	for {
 		pl := <-ch
-		log.Printf("Received \"%s\":\n==========%s\n==========",
+		log.Printf("Received \"%s\":\n==========\n%s\n==========",
 			pl.Title, pl.Body)
 
 		for _, ntf := range notifiers {

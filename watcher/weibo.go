@@ -92,7 +92,7 @@ func (watcher *weiboWatcher) setup() error {
 		if err != nil {
 			return
 		}
-		watcher.name = data.Data.UserInfo.ScreenName
+		watcher.name = "微博 " + data.Data.UserInfo.ScreenName
 		for _, tab := range data.Data.TabsInfo.Tabs {
 			if tab.TabType == "weibo" {
 				watcher.containerID = tab.Containerid
@@ -161,7 +161,7 @@ func (watcher weiboWatcher) parseContent() common.NotifyPayload {
 		if node.Data == "#明日方舟#" {
 			continue
 		}
-		texts += strings.Trim(node.Data, " ")
+		texts += strings.Trim(node.Data, " \n")
 	}
 
 	return common.NotifyPayload{
@@ -173,9 +173,9 @@ func (watcher weiboWatcher) parseContent() common.NotifyPayload {
 
 func (watcher *weiboWatcher) Produce(ch chan common.NotifyPayload) {
 	if watcher.update() {
-		log.Printf("New Weibo from \"%s\"...\n", watcher.name)
+		log.Printf("New post from \"%s\"...\n", watcher.name)
 		ch <- watcher.parseContent()
 	} else {
-		log.Printf("Waiting for Weibo \"%s\"...\n", watcher.name)
+		log.Printf("Waiting for post \"%s\"...\n", watcher.name)
 	}
 }

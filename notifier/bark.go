@@ -44,7 +44,7 @@ func (notifier barkNotifier) Push(payload common.NotifyPayload) {
 			notifier.apiURL,
 			token,
 			payload.Title,
-			payload.Body[:128],
+			payload.Body,
 			payload.URL,
 		))
 		if err != nil {

@@ -76,7 +76,7 @@ func (notifier iftttNotifier) Push(payload common.NotifyPayload) {
 
 		data, err := json.Marshal(
 			webhookPayload{
-				Value1: payload.Body[:128],
+				Value1: payload.Body,
 				Value2: payload.URL,
 			},
 		)

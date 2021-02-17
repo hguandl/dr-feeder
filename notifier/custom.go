@@ -31,7 +31,7 @@ func (notifier customNotifier) Push(payload common.NotifyPayload) {
 	_, err := http.PostForm(notifier.apiURL,
 		url.Values{
 			"title": {payload.Title},
-			"body":  {payload.Body[:128]},
+			"body":  {payload.Body},
 			"url":   {payload.URL},
 		})
 	if err != nil {
