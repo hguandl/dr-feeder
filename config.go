@@ -14,11 +14,6 @@ type yamlConfig struct {
 	Notifiers []map[string]interface{}
 }
 
-type notifierConfig struct {
-	Type   string
-	Params map[string]interface{}
-}
-
 func ParseConfig(path string) ([]notifier.Notifier, error) {
 	yamlFile, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -35,7 +30,7 @@ func ParseConfig(path string) ([]notifier.Notifier, error) {
 		return nil, errors.New("Invalid config version")
 	}
 
-	ret := make([]notifier.Notifier, 0)
+	ret := make([]notifier.Notifier, len(config.Notifiers))
 	for idx, ntfc := range config.Notifiers {
 		ntft, ok := ntfc["type"].(string)
 		if !ok {
@@ -47,28 +42,35 @@ func ParseConfig(path string) ([]notifier.Notifier, error) {
 		case "custom":
 			ntf, ok := notifier.FromCustomNotifierConfig(ntfc)
 			if ok {
-				ret = append(ret, ntf)
+				ret[idx] = ntf
 			} else {
 				err = fmt.Errorf("Cannot parse notifier #%d", idx)
 			}
 		case "tgbot":
 			ntf, ok := notifier.FromTgBotNotifierConfig(ntfc)
 			if ok {
-				ret = append(ret, ntf)
+				ret[idx] = ntf
 			} else {
 				err = fmt.Errorf("Cannot parse notifier #%d", idx)
 			}
 		case "workwx":
 			ntf, ok := notifier.FromWorkWechatNotifierConfig(ntfc)
 			if ok {
-				ret = append(ret, ntf)
+				ret[idx] = ntf
 			} else {
 				err = fmt.Errorf("Cannot parse notifier #%d", idx)
 			}
 		case "bark":
 			ntf, ok := notifier.FromBarkNotifierConfig(ntfc)
 			if ok {
-				ret = append(ret, ntf)
+				ret[idx] = ntf
+			} else {
+				err = fmt.Errorf("Cannot parse notifier #%d", idx)
+			}
+		case "ifttt":
+			ntf, ok := notifier.FromIFTTTNotifierConfig(ntfc)
+			if ok {
+				ret[idx] = ntf
 			} else {
 				err = fmt.Errorf("Cannot parse notifier #%d", idx)
 			}

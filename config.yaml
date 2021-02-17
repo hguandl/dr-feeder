@@ -16,3 +16,9 @@ notifiers:
   tokens:
     - "qwertyuiop"
     - "asdfghjkl"
+- type: ifttt
+  webhooks:
+    - event: "call"
+      api_key: "amiya"
+    - event: "sleep"
+      api_key: "doctor"
