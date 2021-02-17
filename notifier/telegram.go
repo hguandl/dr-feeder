@@ -9,13 +9,13 @@ import (
 	"github.com/hguandl/arknights-news-watcher/v2/common"
 )
 
-type tgBotNotifer struct {
+type tgBotNotifier struct {
 	botAPIKey string
 	chats     []string
 }
 
 func NewTgBotNotifier(botAPIKey string, chats []string) Notifier {
-	return tgBotNotifer{
+	return tgBotNotifier{
 		botAPIKey: botAPIKey,
 		chats:     chats,
 	}
@@ -43,17 +43,17 @@ func FromTgBotNotifierConfig(config map[string]interface{}) (Notifier, bool) {
 	return NewTgBotNotifier(botAPIKey, chats), true
 }
 
-func (notifier tgBotNotifer) apiURL() string {
+func (notifier tgBotNotifier) apiURL() string {
 	return fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage",
 		notifier.botAPIKey,
 	)
 }
 
-func (notifer tgBotNotifer) Push(payload common.NotifyPayload) {
+func (notifier tgBotNotifier) Push(payload common.NotifyPayload) {
 	texts := payload.Body + "\n\n" + payload.URL
 
-	for _, chat := range notifer.chats {
-		_, err := http.PostForm(notifer.apiURL(),
+	for _, chat := range notifier.chats {
+		_, err := http.PostForm(notifier.apiURL(),
 			url.Values{
 				"chat_id": {fmt.Sprint(chat)},
 				"text":    {texts},
@@ -62,5 +62,4 @@ func (notifer tgBotNotifer) Push(payload common.NotifyPayload) {
 			log.Println(err)
 		}
 	}
-
 }

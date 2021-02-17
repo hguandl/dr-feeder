@@ -8,12 +8,12 @@ import (
 	"github.com/hguandl/arknights-news-watcher/v2/common"
 )
 
-type customNotifer struct {
+type customNotifier struct {
 	apiURL string
 }
 
 func NewCustomNotifier(apiURL string) Notifier {
-	return customNotifer{
+	return customNotifier{
 		apiURL: apiURL,
 	}
 }
@@ -27,8 +27,8 @@ func FromCustomNotifierConfig(config map[string]interface{}) (Notifier, bool) {
 	return NewCustomNotifier(apiURL), true
 }
 
-func (notifer customNotifer) Push(payload common.NotifyPayload) {
-	_, err := http.PostForm(notifer.apiURL,
+func (notifier customNotifier) Push(payload common.NotifyPayload) {
+	_, err := http.PostForm(notifier.apiURL,
 		url.Values{
 			"title": {payload.Title},
 			"body":  {payload.Body[:128]},

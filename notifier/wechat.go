@@ -71,7 +71,7 @@ func (notifier workWechatNotifier) apiURL() string {
 	)
 }
 
-func (notifer workWechatNotifier) Push(payload common.NotifyPayload) {
+func (notifier workWechatNotifier) Push(payload common.NotifyPayload) {
 	var title, desc string
 	if len(payload.Body) > 64 {
 		title = payload.Body[:64]
@@ -83,9 +83,9 @@ func (notifer workWechatNotifier) Push(payload common.NotifyPayload) {
 
 	data, err := json.Marshal(
 		textCardPayload{
-			Touser:  notifer.toUser,
+			Touser:  notifier.toUser,
 			Msgtype: "textcard",
-			Agentid: notifer.agentID,
+			Agentid: notifier.agentID,
 			Textcard: textCard{
 				Title:       title,
 				Description: desc,
@@ -99,7 +99,7 @@ func (notifer workWechatNotifier) Push(payload common.NotifyPayload) {
 		return
 	}
 
-	_, err = http.Post(notifer.apiURL(),
+	_, err = http.Post(notifier.apiURL(),
 		"application/json",
 		bytes.NewBuffer(data),
 	)
