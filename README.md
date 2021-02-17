@@ -21,7 +21,14 @@ $ go install
 
 ## Usage
 
-### Example Configuation File
+```bash
+$ dr-feeder -h
+Usage of dr-feeder:
+  -c string
+    	Configuration file (default "config.yaml")
+```
+
+## Example Configuation File
 
 ```yaml
 ### Currently the version is fixed to 1.0

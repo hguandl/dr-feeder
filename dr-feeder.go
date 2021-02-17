@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"math/rand"
 	"time"
@@ -31,7 +32,13 @@ func watch(watcher watcher.Watcher, ch chan common.NotifyPayload) {
 }
 
 func main() {
-	ch := make(chan common.NotifyPayload)
+	pathPtr := flag.String("c", "config.yaml", "Configuration file")
+	flag.Parse()
+
+	notifiers, err := ParseConfig(*pathPtr)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	weibo, err := watcher.NewWeiboWatcher(6279793937)
 	if err != nil {
@@ -43,11 +50,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	notifiers, err := ParseConfig("config.yaml")
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	ch := make(chan common.NotifyPayload)
 
 	go watch(weibo, ch)
 	go watch(anAnno, ch)
