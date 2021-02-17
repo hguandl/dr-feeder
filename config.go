@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/hguandl/arknights-news-watcher/v2/notifier"
+	"github.com/hguandl/dr-feeder/v2/notifier"
 	"gopkg.in/yaml.v2"
 )
 

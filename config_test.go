@@ -3,7 +3,7 @@ package main_test
 import (
 	"testing"
 
-	ak "github.com/hguandl/arknights-news-watcher/v2"
+	ak "github.com/hguandl/dr-feeder/v2"
 )
 
 func TestParseConfig(t *testing.T) {

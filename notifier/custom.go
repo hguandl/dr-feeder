@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/hguandl/arknights-news-watcher/v2/common"
+	"github.com/hguandl/dr-feeder/v2/common"
 )
 
 type customNotifier struct {

@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/gocolly/colly/v2"
-	"github.com/hguandl/arknights-news-watcher/v2/common"
+	"github.com/hguandl/dr-feeder/v2/common"
 )
 
 const iOSClientUA = "arknights/385" +

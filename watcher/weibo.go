@@ -9,7 +9,7 @@ import (
 
 	"github.com/antchfx/htmlquery"
 	"github.com/gocolly/colly/v2"
-	"github.com/hguandl/arknights-news-watcher/v2/common"
+	"github.com/hguandl/dr-feeder/v2/common"
 )
 
 const safariUA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6)" +

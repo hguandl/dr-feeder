@@ -1,4 +1,4 @@
-module github.com/hguandl/arknights-news-watcher/v2
+module github.com/hguandl/dr-feeder/v2
 
 go 1.15
 

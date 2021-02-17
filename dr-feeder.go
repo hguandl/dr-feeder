@@ -5,9 +5,9 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/hguandl/arknights-news-watcher/v2/common"
-	"github.com/hguandl/arknights-news-watcher/v2/notifier"
-	"github.com/hguandl/arknights-news-watcher/v2/watcher"
+	"github.com/hguandl/dr-feeder/v2/common"
+	"github.com/hguandl/dr-feeder/v2/notifier"
+	"github.com/hguandl/dr-feeder/v2/watcher"
 )
 
 func consume(ch chan common.NotifyPayload, notifiers []notifier.Notifier) {
