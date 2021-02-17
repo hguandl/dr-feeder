@@ -13,9 +13,9 @@ type customNotifer struct {
 }
 
 func NewCustomNotifier(apiURL string) Notifier {
-	var notifer customNotifer
-	notifer.apiURL = apiURL
-	return notifer
+	return customNotifer{
+		apiURL: apiURL,
+	}
 }
 
 func FromCustomNotifierConfig(config map[string]interface{}) (Notifier, bool) {

@@ -2,3 +2,13 @@ version: 1.0
 notifiers:
 - type: custom
   api_url: "http://localhost:8080/"
+- type: tgbot
+  api_key: "123456:foobar"
+  chats:
+    - "114514"
+    - "-1919810"
+- type: workwx
+  corpid: "wx20190501"
+  agentid: 1000002
+  corpsecret: "rhodesisland"
+  touser: "@all"
