@@ -28,6 +28,12 @@ Usage of dr-feeder:
     	Configuration file (default "config.yaml")
 ```
 
+```bash
+$ dr-feeder -c ./config.yaml
+2021/02/18 01:01:04 Waiting for post "明日方舟客户端公告"...
+2021/02/18 01:01:04 Waiting for post "微博 明日方舟Arknights"...
+```
+
 ## Example Configuation File
 
 ```yaml
