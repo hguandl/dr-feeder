@@ -3,6 +3,7 @@ package watcher
 import (
 	"encoding/json"
 	"log"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 	"github.com/hguandl/dr-feeder/v2/common"
@@ -88,7 +89,9 @@ func (watcher *akAnnounceWatcher) update() bool {
 				break
 			}
 		}
-		return true
+		if strings.Contains(watcher.latestAnno.Title, "制作组通讯") {
+			return true
+		}
 	}
 
 	return false
