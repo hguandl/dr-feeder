@@ -11,10 +11,10 @@ $ docker pull hguandl/dr-feeder:latest
 
 ### Startup container
 
-The configuration file must be named by `config.yaml`. Suppose it is placed in `/some/path/config.yaml`.
+The configuration file must be named by `config.yaml`. Suppose its **absolute** path is `/full/path/config.yaml`.
 
 ```bash
-$ docker run -d -v /some/path/:/go/etc/ dr-feeder
+$ docker run -d -v /full/path/:/go/etc/ hguandl/dr-feeder
 ```
 
 ## Installation
