@@ -2,6 +2,21 @@
 
 A watcher for news by Arknights.
 
+## Docker
+
+### Retrieve Docker image
+```bash
+$ docker pull hguandl/dr-feeder:latest
+```
+
+### Startup container
+
+The configuration file must be named by `config.yaml`. Suppose it is placed in `/some/path/config.yaml`.
+
+```bash
+$ docker run -d -v /some/path/:/go/etc/ dr-feeder
+```
+
 ## Installation
 
 ### Retrieve via Go command
