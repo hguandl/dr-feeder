@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"math/rand"
 	"time"
@@ -10,6 +11,9 @@ import (
 	"github.com/hguandl/dr-feeder/v2/notifier"
 	"github.com/hguandl/dr-feeder/v2/watcher"
 )
+
+// Version is current `git describe --tags` infomation.
+var Version string = "1.0"
 
 func consume(ch chan common.NotifyPayload, notifiers []notifier.Notifier) {
 	for {
@@ -32,8 +36,14 @@ func watch(watcher watcher.Watcher, ch chan common.NotifyPayload) {
 }
 
 func main() {
+	printVersion := flag.Bool("V", false, "Print current version")
 	pathPtr := flag.String("c", "config.yaml", "Configuration file")
 	flag.Parse()
+
+	if *printVersion {
+		fmt.Printf("dr-feeder %s\n", Version)
+		return
+	}
 
 	notifiers, err := ParseConfig(*pathPtr)
 	if err != nil {

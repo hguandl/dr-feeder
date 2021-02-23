@@ -14,6 +14,7 @@ type tgBotNotifier struct {
 	chats     []string
 }
 
+// NewTgBotNotifier creates a Notifier of Telegram Bot.
 func NewTgBotNotifier(botAPIKey string, chats []string) Notifier {
 	return tgBotNotifier{
 		botAPIKey: botAPIKey,
@@ -21,6 +22,7 @@ func NewTgBotNotifier(botAPIKey string, chats []string) Notifier {
 	}
 }
 
+// FromTgBotNotifierConfig parses the config to create a tgBotNotifier.
 func FromTgBotNotifierConfig(config map[string]interface{}) (Notifier, bool) {
 	botAPIKey, ok := config["api_key"].(string)
 	if !ok {

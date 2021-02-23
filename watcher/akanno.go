@@ -35,6 +35,7 @@ type akAnnounceWatcher struct {
 	existedID  []string
 }
 
+// NewAkAnnounceWatcher creates a Watcher of Arknights game annoucements.
 func NewAkAnnounceWatcher() (Watcher, error) {
 	watcher := new(akAnnounceWatcher)
 	watcher.name = "明日方舟客户端公告"

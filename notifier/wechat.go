@@ -31,6 +31,7 @@ type textCard struct {
 	Btntxt      string `json:"btntxt"`
 }
 
+// NewWorkWechatNotifier creates a Notifier with Work Wechat App.
 func NewWorkWechatNotifier(corpID string, agentID int, corpSecret string,
 	toUser string) Notifier {
 	return workWechatNotifier{
@@ -41,6 +42,7 @@ func NewWorkWechatNotifier(corpID string, agentID int, corpSecret string,
 	}
 }
 
+// FromWorkWechatNotifierConfig parses the config to create a workWechatNotifier.
 func FromWorkWechatNotifierConfig(config map[string]interface{}) (Notifier, bool) {
 	corpID, ok := config["corpid"].(string)
 	if !ok {

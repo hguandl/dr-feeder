@@ -12,12 +12,14 @@ type customNotifier struct {
 	apiURL string
 }
 
+// NewCustomNotifier creates a Notifier with general API.
 func NewCustomNotifier(apiURL string) Notifier {
 	return customNotifier{
 		apiURL: apiURL,
 	}
 }
 
+// FromCustomNotifierConfig parses the config to create a customNotifier.
 func FromCustomNotifierConfig(config map[string]interface{}) (Notifier, bool) {
 	apiURL, ok := config["api_url"].(string)
 	if !ok {

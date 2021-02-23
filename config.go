@@ -14,6 +14,7 @@ type yamlConfig struct {
 	Notifiers []map[string]interface{}
 }
 
+// ParseConfig loads from config file and returns a list of Notifiers.
 func ParseConfig(path string) ([]notifier.Notifier, error) {
 	yamlFile, err := ioutil.ReadFile(path)
 	if err != nil {

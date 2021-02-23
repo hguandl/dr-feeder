@@ -24,12 +24,14 @@ type webhookPayload struct {
 	Value2 string `json:"value2"`
 }
 
+// NewIFTTTNotifier creates a Notifier of IFTTT Webhook.
 func NewIFTTTNotifier(webhooks []webhookConfig) Notifier {
 	return iftttNotifier{
 		webhooks: webhooks,
 	}
 }
 
+// FromIFTTTNotifierConfig parses the config to create a iftttNotifier.
 func FromIFTTTNotifierConfig(config map[string]interface{}) (Notifier, bool) {
 	listRaw, ok := config["webhooks"].([]interface{})
 	if !ok {

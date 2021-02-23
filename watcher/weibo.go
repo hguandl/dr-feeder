@@ -53,6 +53,7 @@ type weiboWatcher struct {
 	latestMblog mblog
 }
 
+// NewWeiboWatcher creates a Watcher of Arknights official Weibo.
 func NewWeiboWatcher(uid int64) (Watcher, error) {
 	watcher := new(weiboWatcher)
 	watcher.uid = uint64(uid)

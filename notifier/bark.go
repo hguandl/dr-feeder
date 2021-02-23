@@ -13,6 +13,7 @@ type barkNotifier struct {
 	apiTokens []string
 }
 
+// NewBarkNotifier creates a Notifier with iOS Bark App.
 func NewBarkNotifier(apiTokens []string) Notifier {
 	return barkNotifier{
 		apiURL:    "https://api.day.app",
@@ -20,6 +21,7 @@ func NewBarkNotifier(apiTokens []string) Notifier {
 	}
 }
 
+// FromBarkNotifierConfig parses the config file to create a barkNotifier.
 func FromBarkNotifierConfig(config map[string]interface{}) (Notifier, bool) {
 	tokensRaw, ok := config["tokens"].([]interface{})
 	if !ok {
