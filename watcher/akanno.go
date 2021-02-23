@@ -30,8 +30,8 @@ type announceMeta struct {
 
 type akAnnounceWatcher struct {
 	name       string
-	latestID   string
 	latestAnno announce
+	existedID  []string
 }
 
 func NewAkAnnounceWatcher() (Watcher, error) {
@@ -42,7 +42,7 @@ func NewAkAnnounceWatcher() (Watcher, error) {
 }
 
 func (watcher akAnnounceWatcher) fetchAPI() (announceMeta, error) {
-	const apiURL = "https://ak-fs.hypergryph.com/announce/IOS/announcement.meta.json?sign="
+	const apiURL = "https://ak-fs.hypergryph.com/announce/IOS/announcement.meta.json?sign=1145141919"
 	var err error = nil
 	var data announceMeta
 	c := colly.NewCollector(
@@ -69,9 +69,18 @@ func (watcher *akAnnounceWatcher) setup() error {
 		return err
 	}
 
-	watcher.latestID = data.FocusAnnounceID
+	watcher.existedID = flushIDList(data.AnnounceList)
 
 	return nil
+}
+
+func flushIDList(announceList []announce) []string {
+	ret := make([]string, len(announceList))
+	for i, anno := range announceList {
+		ret[i] = anno.AnnounceID
+	}
+
+	return ret
 }
 
 func (watcher *akAnnounceWatcher) update() bool {
@@ -81,16 +90,21 @@ func (watcher *akAnnounceWatcher) update() bool {
 		return false
 	}
 
-	if data.FocusAnnounceID != watcher.latestID {
-		for _, anno := range data.AnnounceList {
-			if anno.AnnounceID == data.FocusAnnounceID {
-				watcher.latestID = anno.AnnounceID
-				watcher.latestAnno = anno
+	for _, anno := range data.AnnounceList {
+		newID := anno.AnnounceID
+		foundNew := false
+		for _, oldID := range watcher.existedID {
+			if newID != oldID {
+				foundNew = true
 				break
 			}
 		}
-		if strings.Contains(watcher.latestAnno.Title, "制作组通讯") {
-			return true
+		if foundNew {
+			watcher.existedID = flushIDList(data.AnnounceList)
+			if strings.Contains(anno.Title, "制作组通讯") {
+				watcher.latestAnno = anno
+				return true
+			}
 		}
 	}
 
