@@ -30,6 +30,7 @@ type announceMeta struct {
 
 type akAnnounceWatcher struct {
 	name       string
+	focusID    string
 	latestAnno announce
 	existedID  []string
 }
@@ -69,6 +70,7 @@ func (watcher *akAnnounceWatcher) setup() error {
 		return err
 	}
 
+	watcher.focusID = data.FocusAnnounceID
 	watcher.existedID = flushIDList(data.AnnounceList)
 
 	return nil
@@ -88,6 +90,24 @@ func (watcher *akAnnounceWatcher) update() bool {
 	if err != nil {
 		log.Println(err)
 		return false
+	}
+
+	if watcher.focusID != data.FocusAnnounceID {
+		watcher.focusID = data.FocusAnnounceID
+		existed := false
+		for _, anno := range data.AnnounceList {
+			if anno.AnnounceID == data.FocusAnnounceID {
+				existed = true
+				break
+			}
+		}
+		if existed == false {
+			watcher.latestAnno = announce{
+				Title:  "出现公告弹窗，可能会有新饼",
+				WebURL: "about:blank",
+			}
+			return true
+		}
 	}
 
 	for _, anno := range data.AnnounceList {
