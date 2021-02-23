@@ -82,9 +82,9 @@ func (watcher *akAnnounceWatcher) update() bool {
 	}
 
 	if data.FocusAnnounceID != watcher.latestID {
-		watcher.latestID = data.FocusAnnounceID
 		for _, anno := range data.AnnounceList {
 			if anno.AnnounceID == data.FocusAnnounceID {
+				watcher.latestID = anno.AnnounceID
 				watcher.latestAnno = anno
 				break
 			}
