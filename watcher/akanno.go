@@ -112,14 +112,14 @@ func (watcher *akAnnounceWatcher) update() bool {
 
 	for _, anno := range data.AnnounceList {
 		newID := anno.AnnounceID
-		foundNew := false
+		existed := false
 		for _, oldID := range watcher.existedID {
-			if newID != oldID {
-				foundNew = true
+			if newID == oldID {
+				existed = true
 				break
 			}
 		}
-		if foundNew {
+		if existed == false {
 			watcher.existedID = flushIDList(data.AnnounceList)
 			if strings.Contains(anno.Title, "制作组通讯") {
 				watcher.latestAnno = anno
