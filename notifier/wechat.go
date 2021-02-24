@@ -39,6 +39,11 @@ func NewWorkWechatNotifier(corpID string, agentID string, corpSecret string,
 	return workWechatNotifier{client: &client}
 }
 
+// FromWxAPIClient creates a Notifier with an API client.
+func FromWxAPIClient(client *wxmsgapp.WxAPIClient) Notifier {
+	return workWechatNotifier{client: client}
+}
+
 // FromWorkWechatNotifierConfig parses the config to create a workWechatNotifier.
 func FromWorkWechatNotifierConfig(config map[string]interface{}) (Notifier, bool) {
 	corpID, ok := config["corpid"].(string)
