@@ -2,22 +2,10 @@
 
 A watcher for news by Arknights.
 
-## Docker
-
-### Retrieve Docker image
-```bash
-$ docker pull hguandl/dr-feeder:latest
-```
-
-### Startup container
-
-The configuration file must be named by `config.yaml`. Suppose its **absolute** path is `/full/path/config.yaml`.
-
-```bash
-$ docker run -d -v /full/path/:/go/etc/ hguandl/dr-feeder
-```
-
 ## Installation
+
+### Download from GitHub Release
+<https://github.com/hguandl/dr-feeder/releases/latest>
 
 ### Retrieve via Go command
 
@@ -47,6 +35,21 @@ Usage of dr-feeder:
 $ dr-feeder -c ./config.yaml
 2021/02/18 01:01:04 Waiting for post "明日方舟客户端公告"...
 2021/02/18 01:01:04 Waiting for post "微博 明日方舟Arknights"...
+```
+
+## Docker Support
+
+### Retrieve Docker image
+```bash
+$ docker pull hguandl/dr-feeder:latest
+```
+
+### Startup container
+
+The configuration file must be named by `config.yaml`. Suppose its **absolute** path is `/full/path/config.yaml`.
+
+```bash
+$ docker run -d -v /full/path/:/go/etc/ hguandl/dr-feeder
 ```
 
 ## Example Configuation File
