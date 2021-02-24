@@ -82,7 +82,7 @@ notifiers:
 ##
 - type: workwx
   corpid: "wx20190501"
-  agentid: 1000002
+  agentid: "1000002"
   corpsecret: "rhodesisland"
   touser: "@all"
 
