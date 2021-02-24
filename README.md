@@ -10,7 +10,8 @@ A watcher for news by Arknights.
 ### Retrieve via Go command
 
 ```bash
-$ go get -u github.com/hguandl/dr-feeder
+$ export GOPROXY=https://goproxy.io,direct
+$ go get -u github.com/hguandl/dr-feeder/v2
 ```
 
 ### Build from source
@@ -81,7 +82,7 @@ notifiers:
 ##
 - type: workwx
   corpid: "wx20190501"
-  agentid: 1000002
+  agentid: "1000002"
   corpsecret: "rhodesisland"
   touser: "@all"
 
