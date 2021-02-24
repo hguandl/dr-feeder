@@ -13,7 +13,7 @@ import (
 )
 
 // Version is current `git describe --tags` infomation.
-var Version string = "1.0.1"
+var Version string = "1.0.2"
 
 func consume(ch chan common.NotifyPayload, notifiers []notifier.Notifier) {
 	for {
