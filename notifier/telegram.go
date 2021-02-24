@@ -55,13 +55,15 @@ func (notifier tgBotNotifier) Push(payload common.NotifyPayload) {
 	texts := payload.Body + "\n\n" + payload.URL
 
 	for _, chat := range notifier.chats {
-		_, err := http.PostForm(notifier.apiURL(),
+		r, err := http.PostForm(notifier.apiURL(),
 			url.Values{
 				"chat_id": {fmt.Sprint(chat)},
 				"text":    {texts},
 			})
 		if err != nil {
 			log.Println(err)
+		} else {
+			r.Body.Close()
 		}
 	}
 }

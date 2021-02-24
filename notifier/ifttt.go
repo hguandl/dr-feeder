@@ -75,21 +75,26 @@ func (notifier iftttNotifier) apiURL(webhook webhookConfig) string {
 
 func (notifier iftttNotifier) Push(payload common.NotifyPayload) {
 	for _, webhook := range notifier.webhooks {
-
 		data, err := json.Marshal(
 			webhookPayload{
 				Value1: payload.Body,
 				Value2: payload.URL,
 			},
 		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-		_, err = http.Post(
+		r, err := http.Post(
 			notifier.apiURL(webhook),
 			"application/json",
 			bytes.NewBuffer(data),
 		)
 		if err != nil {
 			log.Println(err)
+		} else {
+			r.Body.Close()
 		}
 	}
 }

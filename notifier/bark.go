@@ -41,7 +41,7 @@ func FromBarkNotifierConfig(config map[string]interface{}) (Notifier, bool) {
 
 func (notifier barkNotifier) Push(payload common.NotifyPayload) {
 	for _, token := range notifier.apiTokens {
-		_, err := http.Get(fmt.Sprintf(
+		r, err := http.Get(fmt.Sprintf(
 			"%s/%s/%s/%s?url=%s",
 			notifier.apiURL,
 			token,
@@ -51,6 +51,8 @@ func (notifier barkNotifier) Push(payload common.NotifyPayload) {
 		))
 		if err != nil {
 			log.Println(err)
+		} else {
+			r.Body.Close()
 		}
 	}
 }

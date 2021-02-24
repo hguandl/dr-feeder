@@ -30,7 +30,7 @@ func FromCustomNotifierConfig(config map[string]interface{}) (Notifier, bool) {
 }
 
 func (notifier customNotifier) Push(payload common.NotifyPayload) {
-	_, err := http.PostForm(notifier.apiURL,
+	r, err := http.PostForm(notifier.apiURL,
 		url.Values{
 			"title": {payload.Title},
 			"body":  {payload.Body},
@@ -38,5 +38,7 @@ func (notifier customNotifier) Push(payload common.NotifyPayload) {
 		})
 	if err != nil {
 		log.Println(err)
+		return
 	}
+	defer r.Body.Close()
 }
