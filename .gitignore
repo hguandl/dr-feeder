@@ -1,3 +1,6 @@
+### Testing files ###
+config_test.yaml
+
 ### Compile output ###
 build/
 dr-feeder
