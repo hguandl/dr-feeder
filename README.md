@@ -10,7 +10,8 @@ A watcher for news by Arknights.
 ### Retrieve via Go command
 
 ```bash
-$ go get -u github.com/hguandl/dr-feeder
+$ export GOPROXY=https://goproxy.io,direct
+$ go get -u github.com/hguandl/dr-feeder/v2
 ```
 
 ### Build from source
