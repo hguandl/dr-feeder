@@ -28,8 +28,10 @@ $ go install
 ```bash
 $ dr-feeder -h
 Usage of dr-feeder:
+  -V    Print current version
   -c string
-    	Configuration file (default "config.yaml")
+        Configuration file (default "config.yaml")
+  -d    Debug with fake server
 ```
 
 ```bash
@@ -55,53 +57,4 @@ $ docker run -d -v /full/path/:/go/etc/ hguandl/dr-feeder
 
 ## Example Configuation File
 
-```yaml
-### Currently the version is fixed to 1.0
-version: 1.0
-
-notifiers:
-### Custom API server
-# Send an HTTP POST form to <api_url>,
-# which contains "title", "body" and "url".
-##
-- type: custom
-  api_url: "http://localhost:8080/"
-
-### Telegram bot
-# Authencate a telegram bot with <api_key>
-# to send messages to <chats>.
-##
-- type: tgbot
-  api_key: "123456:foobar"
-  chats:
-    - "114514"
-    - "-1919810"
-
-### Work Wechat app
-# See https://hguandl.com/posts/weibo-watcher-deploy/
-##
-- type: workwx
-  corpid: "wx20190501"
-  agentid: "1000002"
-  corpsecret: "rhodesisland"
-  touser: "@all"
-
-### iOS Bark
-# Official API server: https://api.day.app
-##
-- type: bark
-  tokens:
-    - "qwertyuiop"
-    - "asdfghjkl"
-
-### IFTTT Webhook
-# See https://maker.ifttt.com/use/demo-page
-# (use your API key to replace "demo-page" above)
-##
-- type: ifttt
-  webhooks:
-    - event: "call"
-      api_key: "amiya"
-    - event: "sleep"
-      api_key: "doctor"
-```
+<https://github.com/hguandl/dr-feeder/blob/master/config.yaml>
