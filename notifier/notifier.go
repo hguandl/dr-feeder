@@ -3,12 +3,10 @@ package notifier
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 
 	"github.com/hguandl/dr-feeder/v2/common"
 	"github.com/hguandl/dr-feeder/v2/notifier/wxmsgapp"
 	"github.com/mitchellh/mapstructure"
-	"gopkg.in/yaml.v2"
 )
 
 // Notifier is a way to push messages to devices.
@@ -16,30 +14,12 @@ type Notifier interface {
 	Push(common.NotifyPayload)
 }
 
-type yamlConfig struct {
-	Version   string
-	Notifiers []map[string]interface{}
-}
+// ParseNotifiers decodes the config returns a list of Notifiers.
+func ParseNotifiers(configs []map[string]interface{}) ([]Notifier, error) {
+	var err error = nil
+	ret := make([]Notifier, len(configs))
 
-// ParseConfig loads from config file and returns a list of Notifiers.
-func ParseConfig(path string) ([]Notifier, error) {
-	yamlFile, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-
-	var config yamlConfig
-	err = yaml.Unmarshal([]byte(yamlFile), &config)
-	if err != nil {
-		return nil, err
-	}
-
-	if config.Version != "1.0" {
-		return nil, errors.New("Invalid config version")
-	}
-
-	ret := make([]Notifier, len(config.Notifiers))
-	for idx, ntfc := range config.Notifiers {
+	for idx, ntfc := range configs {
 		ntft, ok := ntfc["type"].(string)
 		if !ok {
 			err = errors.New("Invalid notifier config")
