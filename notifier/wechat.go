@@ -27,46 +27,10 @@ type textCard struct {
 	Btntxt      string `json:"btntxt"`
 }
 
-// NewWorkWechatNotifier creates a Notifier with Work Wechat App.
-func NewWorkWechatNotifier(corpID string, agentID string, corpSecret string,
-	toUser string) Notifier {
-	client := wxmsgapp.WxAPIClient{
-		CorpID:     corpID,
-		ToUser:     toUser,
-		AgentID:    agentID,
-		CorpSecret: corpSecret,
-	}
-	return workWechatNotifier{client: &client}
-}
-
 // FromWxAPIClient creates a Notifier with an API client.
+// Compatible with hguandl/rhodes-deliver
 func FromWxAPIClient(client *wxmsgapp.WxAPIClient) Notifier {
 	return workWechatNotifier{client: client}
-}
-
-// FromWorkWechatNotifierConfig parses the config to create a workWechatNotifier.
-func FromWorkWechatNotifierConfig(config map[string]interface{}) (Notifier, bool) {
-	corpID, ok := config["corpid"].(string)
-	if !ok {
-		return nil, false
-	}
-
-	agentID, ok := config["agentid"].(string)
-	if !ok {
-		return nil, false
-	}
-
-	corpSecret, ok := config["corpsecret"].(string)
-	if !ok {
-		return nil, false
-	}
-
-	toUser, ok := config["touser"].(string)
-	if !ok {
-		return nil, false
-	}
-
-	return NewWorkWechatNotifier(corpID, agentID, corpSecret, toUser), true
 }
 
 func formatText(payload common.NotifyPayload) (string, string) {

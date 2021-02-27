@@ -9,28 +9,11 @@ import (
 )
 
 type customNotifier struct {
-	apiURL string
-}
-
-// NewCustomNotifier creates a Notifier with general API.
-func NewCustomNotifier(apiURL string) Notifier {
-	return customNotifier{
-		apiURL: apiURL,
-	}
-}
-
-// FromCustomNotifierConfig parses the config to create a customNotifier.
-func FromCustomNotifierConfig(config map[string]interface{}) (Notifier, bool) {
-	apiURL, ok := config["api_url"].(string)
-	if !ok {
-		return nil, false
-	}
-
-	return NewCustomNotifier(apiURL), true
+	APIURL string `mapstructure:"api_url"`
 }
 
 func (notifier customNotifier) Push(payload common.NotifyPayload) {
-	r, err := http.PostForm(notifier.apiURL,
+	r, err := http.PostForm(notifier.APIURL,
 		url.Values{
 			"title": {payload.Title},
 			"body":  {payload.Body},
