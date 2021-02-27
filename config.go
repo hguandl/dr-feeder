@@ -7,9 +7,12 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// YamlConfig is the top level of configuration file.
+// It contains the information of the version, notifiers and watchers.
 type YamlConfig struct {
 	Version   string
 	Notifiers []map[string]interface{}
+	Watchers  []map[string]interface{}
 }
 
 // LoadConfig reads and parses the config file preliminarily.
@@ -27,7 +30,11 @@ func LoadConfig(path string) (YamlConfig, error) {
 		return config, err
 	}
 
-	if config.Version != "1.0" {
+	if config.Version == "1.0" {
+		return config, errors.New("Please upgrade the config file")
+	}
+
+	if config.Version != "1.1" {
 		return config, errors.New("Invalid config version")
 	}
 

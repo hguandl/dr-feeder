@@ -5,6 +5,7 @@ import (
 
 	main "github.com/hguandl/dr-feeder/v2"
 	"github.com/hguandl/dr-feeder/v2/notifier"
+	"github.com/hguandl/dr-feeder/v2/watcher"
 )
 
 var config main.YamlConfig
@@ -28,6 +29,18 @@ func TestParseNotifiers(t *testing.T) {
 	}
 
 	for _, n := range notifiers {
+		t.Logf("%v", n)
+	}
+}
+
+func TestParseWatchers(t *testing.T) {
+	watchers, err := watcher.ParseWatchers(config.Watchers)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	for _, n := range watchers {
 		t.Logf("%v", n)
 	}
 }

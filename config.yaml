@@ -1,5 +1,5 @@
-### Currently the version is fixed to 1.0
-version: 1.0
+### Currently the version is fixed to 1.1
+version: 1.1
 
 notifiers:
 ### Custom API server
@@ -46,3 +46,12 @@ notifiers:
       api_key: "amiya"
     - event: "sleep"
       api_key: "doctor"
+
+watchers:
+### Weibo with UID
+- type: weibo
+  uid: 6279793937  # @明日方舟Arknights
+
+### Arknights game announcements
+- type: akanno
+  channel: IOS  # Currently only iOS is supported.

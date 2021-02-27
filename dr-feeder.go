@@ -55,20 +55,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	weibo, err := watcher.NewWeiboWatcher(6279793937)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	anAnno, err := watcher.NewAkAnnounceWatcher()
+	watchers, err := watcher.ParseWatchers(config.Watchers)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	ch := make(chan common.NotifyPayload)
 
-	go watch(weibo, ch)
-	go watch(anAnno, ch)
+	for _, watcher := range watchers {
+		go watch(watcher, ch)
+	}
 
 	go consume(ch, notifiers)
 
