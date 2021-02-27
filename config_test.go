@@ -34,7 +34,7 @@ func TestParseNotifiers(t *testing.T) {
 }
 
 func TestParseWatchers(t *testing.T) {
-	watchers, err := watcher.ParseWatchers(config.Watchers)
+	watchers, err := watcher.ParseWatchers(config.Watchers, false)
 
 	if err != nil {
 		t.Error(err)

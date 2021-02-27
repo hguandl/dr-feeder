@@ -33,20 +33,29 @@ type akAnnounceWatcher struct {
 	focusID    string
 	latestAnno announce
 	existedID  []string
+	debugURL   string
 }
 
 // NewAkAnnounceWatcher creates a Watcher of Arknights game annoucements.
-func NewAkAnnounceWatcher() (Watcher, error) {
+func NewAkAnnounceWatcher(debugURL string) (Watcher, error) {
 	watcher := new(akAnnounceWatcher)
 	watcher.name = "明日方舟客户端公告"
+	watcher.debugURL = debugURL
 	err := watcher.setup()
 	return watcher, err
 }
 
 func (watcher akAnnounceWatcher) fetchAPI() (announceMeta, error) {
-	const apiURL = "https://ak-fs.hypergryph.com/announce/IOS/announcement.meta.json?sign=1145141919"
+	var apiURL string
 	var err error = nil
 	var data announceMeta
+
+	if watcher.debugURL != "" {
+		apiURL = watcher.debugURL
+	} else {
+		apiURL = "https://ak-fs.hypergryph.com/announce/IOS/announcement.meta.json?sign=1145141919"
+	}
+
 	c := colly.NewCollector(
 		colly.UserAgent(iOSClientUA),
 	)

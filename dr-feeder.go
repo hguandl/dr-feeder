@@ -37,12 +37,17 @@ func watch(watcher watcher.Watcher, ch chan common.NotifyPayload) {
 
 func main() {
 	printVersion := flag.Bool("V", false, "Print current version")
+	debugMode := flag.Bool("d", false, "Debug with fake server")
 	pathPtr := flag.String("c", "config.yaml", "Configuration file")
 	flag.Parse()
 
 	if *printVersion {
 		fmt.Printf("dr-feeder %s\n", Version)
 		return
+	}
+
+	if *debugMode {
+		println("Running on debug mode...")
 	}
 
 	config, err := LoadConfig(*pathPtr)
@@ -55,7 +60,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	watchers, err := watcher.ParseWatchers(config.Watchers)
+	watchers, err := watcher.ParseWatchers(config.Watchers, *debugMode)
 	if err != nil {
 		log.Fatal(err)
 	}
