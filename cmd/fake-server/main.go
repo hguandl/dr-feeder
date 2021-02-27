@@ -17,12 +17,15 @@ var weiboIdx = 0
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	data, _ := ioutil.ReadFile(weiboTests[weiboIdx])
+	log.Printf("Deliverd %v\n", weiboTests[weiboIdx])
 	weiboIdx = (weiboIdx + 1) % 4
 	w.Write(data)
 }
 
 func main() {
+	listenAddr := ":8088"
 	http.HandleFunc("/weibo", handler)
 
-	log.Fatal(http.ListenAndServe(":8088", nil))
+	log.Printf("Listen at %v\n", listenAddr)
+	log.Fatal(http.ListenAndServe(listenAddr, nil))
 }

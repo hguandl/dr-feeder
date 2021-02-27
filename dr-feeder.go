@@ -18,8 +18,7 @@ var Version string = "v2.0.0"
 func consume(ch chan common.NotifyPayload, notifiers []notifier.Notifier) {
 	for {
 		pl := <-ch
-		log.Printf("Received \"%s\":\n==========\n%s\n==========",
-			pl.Title, pl.Body)
+		log.Printf("Received: %v\n", pl)
 
 		for _, ntf := range notifiers {
 			go ntf.Push(pl)

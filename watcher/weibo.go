@@ -10,40 +10,12 @@ import (
 	"github.com/antchfx/htmlquery"
 	"github.com/gocolly/colly/v2"
 	"github.com/hguandl/dr-feeder/v2/common"
+	"github.com/mitchellh/mapstructure"
 )
 
 const safariUA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6)" +
 	" AppleWebKit/605.1.15 (KHTML, like Gecko)" +
 	" Version/14.0.3 Safari/605.1.15"
-
-type indexData struct {
-	Data struct {
-		UserInfo struct {
-			ScreenName string `json:"screen_name"`
-		} `json:"userInfo"`
-		TabsInfo struct {
-			Tabs []struct {
-				TabType     string `json:"tab_type"`
-				Containerid string `json:"containerid"`
-			} `json:"tabs"`
-		} `json:"tabsInfo"`
-	} `json:"data"`
-}
-
-type mblog struct {
-	CreatedAt string `json:"created_at"`
-	ID        string `json:"id"`
-	Text      string `json:"text"`
-}
-
-type cardData struct {
-	Data struct {
-		Cards []struct {
-			CardType int   `json:"card_type"`
-			Mblog    mblog `json:"mblog,omitempty"`
-		} `json:"cards"`
-	} `json:"data"`
-}
 
 type weiboWatcher struct {
 	uid         uint64
@@ -171,10 +143,25 @@ func (watcher weiboWatcher) parseContent() common.NotifyPayload {
 		texts += strings.Trim(node.Data, " \n")
 	}
 
+	picURL := weibo.PicURL
+	pageURL := fmt.Sprintf("%s/%s", "https://m.weibo.cn/status", weibo.ID)
+
+	var pageInfo pageInfo
+	mapstructure.Decode(weibo.PageInfo, &pageInfo)
+
+	if pageInfo.Type == "article" || pageInfo.Type == "video" {
+		picURL = pageInfo.PagePic.URL
+	}
+
+	if pageInfo.Type == "article" {
+		pageURL = pageInfo.PageURL
+	}
+
 	return common.NotifyPayload{
-		Title: watcher.name,
-		Body:  texts,
-		URL:   fmt.Sprintf("%s/%s", "https://m.weibo.cn/status", weibo.ID),
+		Title:  watcher.name,
+		Body:   texts,
+		URL:    pageURL,
+		PicURL: picURL,
 	}
 }
 

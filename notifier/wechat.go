@@ -17,18 +17,22 @@ func (notifier workWechatNotifier) String() string {
 	return notifier.client.String()
 }
 
-type textCardPayload struct {
-	Touser   string   `json:"touser"`
-	Msgtype  string   `json:"msgtype"`
-	Agentid  string   `json:"agentid"`
-	Textcard textCard `json:"textcard"`
-}
-
-type textCard struct {
+type article struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	URL         string `json:"url"`
-	Btntxt      string `json:"btntxt"`
+	Picurl      string `json:"picurl"`
+}
+
+type news struct {
+	Articles []article `json:"articles"`
+}
+
+type msgPayload struct {
+	Touser  string `json:"touser"`
+	Msgtype string `json:"msgtype"`
+	Agentid string `json:"agentid"`
+	News    news   `json:"news"`
 }
 
 // FromWxAPIClient creates a Notifier with an API client.
@@ -77,17 +81,19 @@ func formatText(payload common.NotifyPayload) (string, string) {
 func (notifier workWechatNotifier) Push(payload common.NotifyPayload) {
 	title, desc := formatText(payload)
 
+	articles := make([]article, 1)
+	articles[0] = article{
+		Title:       title,
+		Description: desc,
+		URL:         payload.URL,
+		Picurl:      payload.PicURL,
+	}
 	data, err := json.Marshal(
-		textCardPayload{
+		msgPayload{
 			Touser:  notifier.client.ToUser,
-			Msgtype: "textcard",
+			Msgtype: "news",
 			Agentid: notifier.client.AgentID,
-			Textcard: textCard{
-				Title:       title,
-				Description: desc,
-				URL:         payload.URL,
-				Btntxt:      "全文",
-			},
+			News:    news{Articles: articles},
 		},
 	)
 	if err != nil {
