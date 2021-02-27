@@ -13,5 +13,7 @@ func TestParseConfig(t *testing.T) {
 		t.Error(err)
 	}
 
-	t.Log(notifiers)
+	for _, n := range notifiers {
+		t.Logf("%v\n", n)
+	}
 }

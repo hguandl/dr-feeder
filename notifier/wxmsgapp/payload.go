@@ -1,6 +1,9 @@
 package wxmsgapp
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // WxAPIClient communicates with Work Wechat API server.
 type WxAPIClient struct {
@@ -17,4 +20,15 @@ type wxAPIResp struct {
 	Errmsg      string `json:"errmsg"`
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int    `json:"expires_in"`
+}
+
+func (client *WxAPIClient) String() string {
+	return fmt.Sprintf("{%v %v %v %v %v %v}",
+		client.AgentID,
+		client.ToUser,
+		client.CorpID,
+		client.CorpSecret,
+		client.AccessToken,
+		client.TokenUntil,
+	)
 }

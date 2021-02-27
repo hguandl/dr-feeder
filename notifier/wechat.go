@@ -13,6 +13,10 @@ type workWechatNotifier struct {
 	client *wxmsgapp.WxAPIClient
 }
 
+func (notifier workWechatNotifier) String() string {
+	return notifier.client.String()
+}
+
 type textCardPayload struct {
 	Touser   string   `json:"touser"`
 	Msgtype  string   `json:"msgtype"`
