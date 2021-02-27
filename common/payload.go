@@ -18,13 +18,36 @@ type NotifyPayload struct {
 	PicURL string
 }
 
-func (payload NotifyPayload) String() string {
-	var size, n int = 0, 0
-	for i := 0; i < 20 && n < len(payload.Body); i++ {
-		_, size = utf8.DecodeRuneInString(payload.Body[n:])
-		n += size
+// UTF8TruncRunes returns the first <length> characters of <src> string with UTF-8 runes.
+func UTF8TruncRunes(src string, length int) string {
+	var runeSize, readBytes int = 0, 0
+
+	for i := 0; i < length && readBytes < len(src); i++ {
+		_, runeSize = utf8.DecodeRuneInString(src[readBytes:])
+		readBytes += runeSize
 	}
-	body := strings.ReplaceAll(payload.Body[:n], "\n", "")
+
+	return src[:readBytes]
+}
+
+// UTF8TruncBytesByRunes returns the first <size> bytes of <src> string with UTF-8 runes.
+func UTF8TruncBytesByRunes(src string, size int) string {
+	var runeSize, readBytes int = 0, 0
+
+	if size > len(src) {
+		size = len(src)
+	}
+
+	for readBytes < size {
+		_, runeSize = utf8.DecodeRuneInString(src[readBytes:])
+		readBytes += runeSize
+	}
+	return src[:readBytes]
+}
+
+func (payload NotifyPayload) String() string {
+	body := UTF8TruncRunes(payload.Body, 20)
+	body = strings.ReplaceAll(body, "\n", "")
 
 	return fmt.Sprintf("{Title: %v} {Body: %v} {URL: %v} {PicURL: %v}",
 		payload.Title,

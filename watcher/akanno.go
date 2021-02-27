@@ -13,21 +13,6 @@ const iOSClientUA = "arknights/385" +
 	" CFNetwork/1220.1" +
 	" Darwin/20.3.0'"
 
-type announce struct {
-	AnnounceID string `json:"announceId"`
-	Title      string `json:"title"`
-	IsWebURL   bool   `json:"isWebUrl"`
-	WebURL     string `json:"webUrl"`
-	Day        int    `json:"day"`
-	Month      int    `json:"month"`
-	Group      string `json:"group"`
-}
-
-type announceMeta struct {
-	FocusAnnounceID string     `json:"focusAnnounceId"`
-	AnnounceList    []announce `json:"announceList"`
-}
-
 type akAnnounceWatcher struct {
 	name       string
 	focusID    string
@@ -114,7 +99,7 @@ func (watcher *akAnnounceWatcher) update() bool {
 		if existed == false {
 			watcher.latestAnno = announce{
 				Title:  "出现公告弹窗，可能会有新饼",
-				WebURL: "about:blank",
+				WebURL: "https://ak.hypergryph.com/news.html",
 			}
 			return true
 		}
