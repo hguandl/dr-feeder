@@ -45,7 +45,7 @@ func main() {
 		return
 	}
 
-	notifiers, err := ParseConfig(*pathPtr)
+	notifiers, err := notifier.ParseConfig(*pathPtr)
 	if err != nil {
 		log.Fatal(err)
 	}

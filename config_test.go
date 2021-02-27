@@ -3,11 +3,11 @@ package main_test
 import (
 	"testing"
 
-	ak "github.com/hguandl/dr-feeder/v2"
+	"github.com/hguandl/dr-feeder/v2/notifier"
 )
 
 func TestParseConfig(t *testing.T) {
-	notifiers, err := ak.ParseConfig("config.yaml")
+	notifiers, err := notifier.ParseConfig("config.yaml")
 
 	if err != nil {
 		t.Error(err)
