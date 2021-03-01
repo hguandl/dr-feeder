@@ -57,7 +57,7 @@ $ cd dr-feeder
 
 ### About fake server
 
-The fake server returnes testing data in `tests` directory. When `dr-feeder` is running on debug mode (`-d`), it will use `debug_url` in the configuration file as the API URL instead of the original (real) URL. It is useful for development and testing.
+The fake server returns testing data in `tests` directory. When `dr-feeder` is running on debug mode (`-d`), it will use `debug_url` in the configuration file as the API URL instead of the original (real) URL. It is useful for development and testing.
 
 ### Testing steps
 

@@ -2,6 +2,8 @@
 
 set -e
 
+rm -rf ./build
+
 PROGRAM=${1}
 TARGET_DIR="build"
 PLATFORMS=(darwin amd64 darwin arm64 linux amd64 windows amd64)
