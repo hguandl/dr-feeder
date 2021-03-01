@@ -2,7 +2,9 @@ package watcher
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
+	"math/rand"
 	"strings"
 
 	"github.com/gocolly/colly/v2"
@@ -30,16 +32,20 @@ func NewAkAnnounceWatcher(debugURL string) (Watcher, error) {
 	return watcher, err
 }
 
+func (watcher akAnnounceWatcher) apiURL() string {
+	if watcher.debugURL != "" {
+		return watcher.debugURL
+	}
+	clientID := rand.Intn(114514191) + 11451419
+	return fmt.Sprintf("%s?sign=%d",
+		"https://ak-fs.hypergryph.com/announce/IOS/announcement.meta.json",
+		clientID,
+	)
+}
+
 func (watcher akAnnounceWatcher) fetchAPI() (announceMeta, error) {
-	var apiURL string
 	var err error = nil
 	var data announceMeta
-
-	if watcher.debugURL != "" {
-		apiURL = watcher.debugURL
-	} else {
-		apiURL = "https://ak-fs.hypergryph.com/announce/IOS/announcement.meta.json?sign=1145141919"
-	}
 
 	c := colly.NewCollector(
 		colly.UserAgent(iOSClientUA),
@@ -53,7 +59,7 @@ func (watcher akAnnounceWatcher) fetchAPI() (announceMeta, error) {
 		err = json.Unmarshal(r.Body, &data)
 	})
 
-	c.Visit(apiURL)
+	c.Visit(watcher.apiURL())
 	c.Wait()
 
 	return data, err
