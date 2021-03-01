@@ -2,28 +2,13 @@
 
 A watcher for news by Arknights.
 
-## Installation
+## Usage
 
-### Download from GitHub Release
+### Download pre-compiled binaries from GitHub Release
+
 <https://github.com/hguandl/dr-feeder/releases/latest>
 
-### Retrieve via Go command
-
-```bash
-$ export GOPROXY=https://goproxy.io,direct
-$ go get -u github.com/hguandl/dr-feeder/v2
-```
-
-### Build from source
-
-```bash
-$ git clone https://github.com/hguandl/dr-feeder.git
-$ cd dr-feeder
-$ go build
-$ go install
-```
-
-## Usage
+### Command line arguments
 
 ```bash
 $ dr-feeder -h
@@ -34,13 +19,21 @@ Usage of dr-feeder:
   -d    Debug with fake server
 ```
 
+### Execution example
+
 ```bash
 $ dr-feeder -c ./config.yaml
 2021/02/18 01:01:04 Waiting for post "明日方舟客户端公告"...
 2021/02/18 01:01:04 Waiting for post "微博 明日方舟Arknights"...
 ```
 
+### Example Configuation File
+
+<https://github.com/hguandl/dr-feeder/blob/master/config.yaml>
+
 ## Docker Support
+
+As an alternative, you can also use a Docker container.
 
 ### Retrieve Docker image
 ```bash
@@ -55,6 +48,42 @@ The configuration file must be named by `config.yaml`. Suppose its **absolute** 
 $ docker run -d -v /full/path/:/go/etc/ hguandl/dr-feeder
 ```
 
-## Example Configuation File
+## Development
 
-<https://github.com/hguandl/dr-feeder/blob/master/config.yaml>
+```bash
+$ git clone https://github.com/hguandl/dr-feeder.git
+$ cd dr-feeder
+```
+
+### About fake server
+
+The fake server returnes testing data in `tests` directory. When `dr-feeder` is running on debug mode (`-d`), it will use `debug_url` in the configuration file as the API URL instead of the original (real) URL. It is useful for development and testing.
+
+### Testing steps
+
+* Setup `debug_url` in the configuration file:
+```yaml
+watchers:
+- type: weibo
+  debug_url: "http://localhost:8088/weibo"
+  uid: 6279793937
+
+### Arknights game announcements
+- type: akanno
+  debug_url: "http://localhost:8088/akanno"
+  channel: IOS
+```
+
+* Run the fake server:
+```bash
+$ go run ./cmd/fake-server
+2021/03/01 19:12:24 Listen at :8088
+
+```
+
+* Run the program in debug mode:
+```bash
+$ go run . -d -c <config_file>.yaml
+Running on debug mode...
+
+```
