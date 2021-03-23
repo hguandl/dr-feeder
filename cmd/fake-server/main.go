@@ -14,12 +14,13 @@ var weiboTests = [4]string{
 }
 var weiboIdx = 0
 
-var akAnnoTests = [5]string{
+var akAnnoTests = [6]string{
 	"tests/akanno/00-init.json",
 	"tests/akanno/01-new-gacha.json",
 	"tests/akanno/02-activity-end.json",
 	"tests/akanno/03-placehold.json",
 	"tests/akanno/04-dev-news.json",
+	"tests/akanno/05-null.json",
 }
 var akAnnoIdx = 0
 
@@ -33,7 +34,7 @@ func weiboHandler(w http.ResponseWriter, r *http.Request) {
 func akAnnoHandler(w http.ResponseWriter, r *http.Request) {
 	data, _ := ioutil.ReadFile(akAnnoTests[akAnnoIdx])
 	log.Printf("Deliverd %v\n", akAnnoTests[akAnnoIdx])
-	akAnnoIdx = (akAnnoIdx + 1) % 5
+	akAnnoIdx = (akAnnoIdx + 1) % 6
 	w.Write(data)
 }
 

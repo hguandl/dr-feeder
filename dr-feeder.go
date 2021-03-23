@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"path"
 	"time"
 
 	"github.com/hguandl/dr-feeder/v2/common"
@@ -13,7 +14,7 @@ import (
 )
 
 // Version is current `git describe --tags` infomation.
-var Version string = "v2.1.1"
+var Version string = "v2.2.0"
 
 func consume(ch chan common.NotifyPayload, notifiers []notifier.Notifier) {
 	for {
@@ -37,7 +38,7 @@ func watch(watcher watcher.Watcher, ch chan common.NotifyPayload) {
 func main() {
 	printVersion := flag.Bool("V", false, "Print current version")
 	debugMode := flag.Bool("d", false, "Debug with fake server")
-	pathPtr := flag.String("c", "config.yaml", "Configuration file")
+	pathPtr := flag.String("c", ".", "Configuration and data directory")
 	flag.Parse()
 
 	if *printVersion {
@@ -49,7 +50,7 @@ func main() {
 		println("Running on debug mode...")
 	}
 
-	config, err := LoadConfig(*pathPtr)
+	config, err := LoadConfig(path.Join(*pathPtr, "config.yaml"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,7 +60,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	watchers, err := watcher.ParseWatchers(config.Watchers, *debugMode)
+	watchers, err := watcher.ParseWatchers(config.Watchers, *pathPtr, *debugMode)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -31,11 +31,11 @@ func LoadConfig(path string) (YamlConfig, error) {
 	}
 
 	if config.Version == "1.0" {
-		return config, errors.New("Please upgrade the config file")
+		return config, errors.New("please upgrade the config file")
 	}
 
 	if config.Version != "1.1" {
-		return config, errors.New("Invalid config version")
+		return config, errors.New("invalid config version")
 	}
 
 	return config, nil

@@ -3,6 +3,7 @@ package watcher
 import (
 	"errors"
 	"fmt"
+	"path"
 
 	"github.com/hguandl/dr-feeder/v2/common"
 	"github.com/mitchellh/mapstructure"
@@ -36,31 +37,36 @@ func wrapDebug(debugURL string, debugMode bool) string {
 }
 
 // ParseWatchers decodes the config returns a list of Watchers.
-func ParseWatchers(configs []map[string]interface{}, debugMode bool) ([]Watcher, error) {
+func ParseWatchers(configs []map[string]interface{}, dataPath string, debugMode bool) ([]Watcher, error) {
 	var err error = nil
 	ret := make([]Watcher, len(configs))
 
 	for idx, config := range configs {
 		watcherType, ok := config["type"].(string)
 		if !ok {
-			err = errors.New("Invalid watcher config")
+			err = errors.New("invalid watcher config")
 			break
 		}
 
 		switch watcherType {
 		case "weibo":
 			var wbConfig weiboConfig
-			err = mapstructure.Decode(config, &wbConfig)
+			if err = mapstructure.Decode(config, &wbConfig); err != nil {
+				break
+			}
 			ret[idx], err = NewWeiboWatcher(wbConfig.UID, wrapDebug(wbConfig.DebugURL, debugMode))
 		case "akanno":
 			var akConfig akAnnoConfig
-			err = mapstructure.Decode(config, &akConfig)
-			if akConfig.Channel != "IOS" {
-				err = fmt.Errorf("Unsupported channel \"%v\"", akConfig.Channel)
+			if err = mapstructure.Decode(config, &akConfig); err != nil {
+				break
 			}
-			ret[idx], err = NewAkAnnounceWatcher(wrapDebug(akConfig.DebugURL, debugMode))
+			if akConfig.Channel != "IOS" {
+				err = fmt.Errorf("unsupported channel \"%v\"", akConfig.Channel)
+				break
+			}
+			ret[idx], err = NewAkAnnounceWatcher(path.Join(dataPath, "akanno.db"), wrapDebug(akConfig.DebugURL, debugMode))
 		default:
-			err = fmt.Errorf("Unknown watcher #%d with type \"%s\"", idx, watcherType)
+			err = fmt.Errorf("unknown watcher #%d with type \"%s\"", idx, watcherType)
 		}
 
 		if err != nil {
