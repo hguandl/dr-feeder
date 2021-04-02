@@ -24,6 +24,13 @@ var akAnnoTests = [6]string{
 }
 var akAnnoIdx = 0
 
+var sirenTests = [6]string{
+	"tests/siren/00.json",
+	"tests/siren/01.json",
+	"tests/siren/750450.json",
+}
+var sirenIdx = 0
+
 func weiboHandler(w http.ResponseWriter, r *http.Request) {
 	data, _ := ioutil.ReadFile(weiboTests[weiboIdx])
 	log.Printf("Deliverd %v\n", weiboTests[weiboIdx])
@@ -38,10 +45,18 @@ func akAnnoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
+func sirenHandler(w http.ResponseWriter, r *http.Request) {
+	data, _ := ioutil.ReadFile(sirenTests[sirenIdx])
+	log.Printf("Deliverd %v\n", sirenTests[sirenIdx])
+	sirenIdx = (sirenIdx + 1) % 3
+	w.Write(data)
+}
+
 func main() {
 	listenAddr := ":8088"
 	http.HandleFunc("/weibo", weiboHandler)
 	http.HandleFunc("/akanno", akAnnoHandler)
+	http.HandleFunc("/siren", sirenHandler)
 
 	log.Printf("Listen at %v\n", listenAddr)
 	log.Fatal(http.ListenAndServe(listenAddr, nil))

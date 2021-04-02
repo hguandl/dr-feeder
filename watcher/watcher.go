@@ -24,6 +24,10 @@ type akAnnoConfig struct {
 	DebugURL string `mapstructure:"debug_url"`
 }
 
+type sirenConfig struct {
+	DebugURL string `mapstructure:"debug_url"`
+}
+
 func wrapDebug(debugURL string, debugMode bool) string {
 	if debugURL != "" {
 		if debugMode {
@@ -65,6 +69,12 @@ func ParseWatchers(configs []map[string]interface{}, dataPath string, debugMode 
 				break
 			}
 			ret[idx], err = NewAkAnnounceWatcher(path.Join(dataPath, "akanno.db"), wrapDebug(akConfig.DebugURL, debugMode))
+		case "siren":
+			var akConfig sirenConfig
+			if err = mapstructure.Decode(config, &akConfig); err != nil {
+				break
+			}
+			ret[idx], err = NewSirenWatcher(path.Join(dataPath, "siren.db"), wrapDebug(akConfig.DebugURL, debugMode))
 		default:
 			err = fmt.Errorf("unknown watcher #%d with type \"%s\"", idx, watcherType)
 		}
