@@ -125,7 +125,7 @@ func (watcher *weiboWatcher) update() bool {
 	return ret
 }
 
-func (watcher weiboWatcher) parseContent() common.NotifyPayload {
+func (watcher weiboWatcher) parseContent() (common.NotifyPayload, bool) {
 	weibo := watcher.latestMblog
 
 	doc, _ := htmlquery.Parse(
@@ -141,6 +141,10 @@ func (watcher weiboWatcher) parseContent() common.NotifyPayload {
 			continue
 		}
 		texts += strings.Trim(node.Data, " \n")
+	}
+
+	if strings.Contains(texts, "微博官方唯一抽奖工具") && strings.Contains(texts, "结果公正有效") {
+		return common.NotifyPayload{}, false
 	}
 
 	picURL := weibo.PicURL
@@ -162,13 +166,18 @@ func (watcher weiboWatcher) parseContent() common.NotifyPayload {
 		Body:   texts,
 		URL:    pageURL,
 		PicURL: picURL,
-	}
+	}, true
 }
 
 func (watcher *weiboWatcher) Produce(ch chan common.NotifyPayload) {
 	if watcher.update() {
 		log.Printf("New post from \"%s\"...\n", watcher.name)
-		ch <- watcher.parseContent()
+		payload, valid := watcher.parseContent()
+		if valid {
+			ch <- payload
+		} else {
+			log.Println("Lottery message, ignored.")
+		}
 	} else {
 		log.Printf("Waiting for post \"%s\"...\n", watcher.name)
 	}
