@@ -15,11 +15,12 @@ type indexData struct {
 }
 
 type mblog struct {
-	CreatedAt string                 `json:"created_at"`
-	ID        string                 `json:"id"`
-	Text      string                 `json:"text"`
-	PicURL    string                 `json:"original_pic,omitempty"`
-	PageInfo  map[string]interface{} `json:"page_info,omitempty"`
+	CreatedAt       string                 `json:"created_at"`
+	ID              string                 `json:"id"`
+	Text            string                 `json:"text"`
+	PicURL          string                 `json:"original_pic,omitempty"`
+	PageInfo        map[string]interface{} `json:"page_info,omitempty"`
+	RetweetedStatus map[string]interface{} `json:"retweeted_status,omitempty"`
 }
 
 type cardData struct {

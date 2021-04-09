@@ -128,6 +128,10 @@ func (watcher *weiboWatcher) update() bool {
 func (watcher weiboWatcher) parseContent() (common.NotifyPayload, bool) {
 	weibo := watcher.latestMblog
 
+	if len(weibo.RetweetedStatus) > 0 {
+		return common.NotifyPayload{}, false
+	}
+
 	doc, _ := htmlquery.Parse(
 		strings.NewReader(
 			strings.ReplaceAll(weibo.Text, "<br />", "\n"),
@@ -176,7 +180,7 @@ func (watcher *weiboWatcher) Produce(ch chan common.NotifyPayload) {
 		if valid {
 			ch <- payload
 		} else {
-			log.Println("Lottery message, ignored.")
+			log.Println("Useless message, ignored.")
 		}
 	} else {
 		log.Printf("Waiting for post \"%s\"...\n", watcher.name)
