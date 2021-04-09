@@ -1,5 +1,6 @@
 ### Testing files ###
 config_test.yaml
+testdir/
 
 ### Compile output ###
 build/

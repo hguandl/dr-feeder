@@ -6,11 +6,13 @@ import (
 	"net/http"
 )
 
-var weiboTests = [4]string{
+var weiboTests = [6]string{
 	"tests/weibo/01-mblog-with-article.json",
 	"tests/weibo/02-mblog-with-video.json",
 	"tests/weibo/03-mblog-with-text.json",
 	"tests/weibo/04-mblog-with-tag-and-pic.json",
+	"tests/weibo/05-retweeted.json",
+	"tests/weibo/06-lottery.json",
 }
 var weiboIdx = 0
 
@@ -34,7 +36,7 @@ var sirenIdx = 0
 func weiboHandler(w http.ResponseWriter, r *http.Request) {
 	data, _ := ioutil.ReadFile(weiboTests[weiboIdx])
 	log.Printf("Deliverd %v\n", weiboTests[weiboIdx])
-	weiboIdx = (weiboIdx + 1) % 4
+	weiboIdx = (weiboIdx + 1) % 6
 	w.Write(data)
 }
 
