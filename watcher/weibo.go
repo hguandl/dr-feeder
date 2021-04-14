@@ -17,6 +17,8 @@ const safariUA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6)" +
 	" AppleWebKit/605.1.15 (KHTML, like Gecko)" +
 	" Version/14.0.3 Safari/605.1.15"
 
+const iOSWeiboIntlUA = "WeiboOverseas/4.2.6 (iPhone; iOS 14.4.2; Scale/3.00)"
+
 type weiboWatcher struct {
 	uid         uint64
 	updateTime  time.Time
@@ -53,6 +55,47 @@ func (watcher weiboWatcher) weiboAPI() string {
 		"&value=", watcher.uid,
 		"&containerid=", watcher.containerID,
 	)
+}
+
+func (watcher weiboWatcher) weiboIntlShareAPI(weiboID string) string {
+	return fmt.Sprintf("https://weibointl.api.weibo.cn/portal.php"+
+		"?a=get_share_url"+
+		"&ct=weibo"+
+		"&lang=zh-Hans"+
+		"&uid=%d"+
+		"&weibo_id=%s",
+		watcher.uid,
+		weiboID,
+	)
+}
+
+func (watcher weiboWatcher) weiboIntlShareURL(weiboID string) (string, error) {
+	var err error = nil
+	var shareURL string
+	c := colly.NewCollector(
+		colly.UserAgent(iOSWeiboIntlUA),
+	)
+
+	c.OnError(func(_ *colly.Response, e error) {
+		err = e
+	})
+
+	c.OnResponse(func(r *colly.Response) {
+		var resp weiboIntlResp
+		err = json.Unmarshal(r.Body, &resp)
+		if err != nil {
+			return
+		}
+		if resp.Retcode != 0 {
+			err = fmt.Errorf("%s", resp.Info)
+			return
+		}
+		shareURL = resp.Data.URL
+	})
+
+	c.Visit(watcher.weiboIntlShareAPI(weiboID))
+	c.Wait()
+	return shareURL, err
 }
 
 func (watcher *weiboWatcher) setup() error {
@@ -152,7 +195,11 @@ func (watcher weiboWatcher) parseContent() (common.NotifyPayload, bool) {
 	}
 
 	picURL := weibo.PicURL
-	pageURL := fmt.Sprintf("%s/%s", "https://m.weibo.cn/status", weibo.ID)
+	pageURL, err := watcher.weiboIntlShareURL(weibo.ID)
+	if err != nil {
+		log.Println(err)
+		pageURL = fmt.Sprintf("%s/%s", "https://m.weibo.cn/status", weibo.ID)
+	}
 
 	var pageInfo pageInfo
 	mapstructure.Decode(weibo.PageInfo, &pageInfo)

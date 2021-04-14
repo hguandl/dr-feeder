@@ -39,3 +39,11 @@ type pageInfo struct {
 	} `mapstructure:"page_pic"`
 	PageURL string `mapstructure:"page_url"`
 }
+
+type weiboIntlResp struct {
+	Data struct {
+		URL string `json:"url"`
+	} `json:"data"`
+	Info    string `json:"info"`
+	Retcode int    `json:"retcode"`
+}
