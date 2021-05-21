@@ -50,6 +50,7 @@ notifiers:
 watchers:
 ### Weibo with UID
 - type: weibo
+  sub:
   # debug_url: "http://localhost:8088/weibo"
   uid: 6279793937  # @明日方舟Arknights
 

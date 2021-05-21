@@ -25,13 +25,15 @@ type weiboWatcher struct {
 	containerID string
 	name        string
 	latestMblog mblog
+	sub         string
 	debugURL    string
 }
 
 // NewWeiboWatcher creates a Watcher of Arknights official Weibo.
-func NewWeiboWatcher(uid int64, debugURL string) (Watcher, error) {
+func NewWeiboWatcher(uid int64, sub string, debugURL string) (Watcher, error) {
 	watcher := new(weiboWatcher)
 	watcher.uid = uint64(uid)
+	watcher.sub = sub
 	watcher.updateTime = time.Now().UTC()
 	watcher.debugURL = debugURL
 	err := watcher.setup()
@@ -137,6 +139,10 @@ func (watcher *weiboWatcher) update() bool {
 
 	c.OnError(func(_ *colly.Response, e error) {
 		err = e
+	})
+
+	c.OnRequest(func(r *colly.Request) {
+		r.Headers.Set("Cookie", fmt.Sprintf("%v=%v", "SUB", watcher.sub))
 	})
 
 	c.OnResponse(func(r *colly.Response) {
