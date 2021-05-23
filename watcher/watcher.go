@@ -17,6 +17,7 @@ type Watcher interface {
 type weiboConfig struct {
 	UID      int64
 	Sub      string
+	Subp     string
 	DebugURL string `mapstructure:"debug_url"`
 }
 
@@ -59,7 +60,7 @@ func ParseWatchers(configs []map[string]interface{}, dataPath string, debugMode 
 			if err = mapstructure.Decode(config, &wbConfig); err != nil {
 				break
 			}
-			ret[idx], err = NewWeiboWatcher(wbConfig.UID, wbConfig.Sub, wrapDebug(wbConfig.DebugURL, debugMode))
+			ret[idx], err = NewWeiboWatcher(wbConfig.UID, wbConfig.Sub, wbConfig.Subp, wrapDebug(wbConfig.DebugURL, debugMode))
 		case "akanno":
 			var akConfig akAnnoConfig
 			if err = mapstructure.Decode(config, &akConfig); err != nil {
