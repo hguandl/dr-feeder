@@ -15,14 +15,14 @@ $ dr-feeder -h
 Usage of dr-feeder:
   -V    Print current version
   -c string
-        Configuration file (default "config.yaml")
+        Configuration and data directory (default ".")
   -d    Debug with fake server
 ```
 
 ### Execution example
 
 ```bash
-$ dr-feeder -c ./config.yaml
+$ dr-feeder -c .
 2021/02/18 01:01:04 Waiting for post "明日方舟客户端公告"...
 2021/02/18 01:01:04 Waiting for post "微博 明日方舟Arknights"...
 ```
