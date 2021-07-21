@@ -47,7 +47,7 @@ func (watcher akAnnounceWatcher) apiURL() string {
 	}
 	clientID := rand.Intn(114514191) + 11451419
 	return fmt.Sprintf("%s?sign=%d",
-		"https://ak-fs.hypergryph.com/announce/IOS/announcement.meta.json",
+		"https://ak-conf.hypergryph.com/config/prod/announce_meta/IOS/announcement.meta.json",
 		clientID,
 	)
 }
