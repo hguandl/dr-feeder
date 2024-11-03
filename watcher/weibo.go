@@ -234,7 +234,7 @@ func (watcher *weiboWatcher) Produce(ch chan common.NotifyPayload) {
 		} else {
 			log.Println("Useless message, ignored.")
 		}
-	} else {
+	} else if watcher.debugURL != "" {
 		log.Printf("Waiting for post \"%s\"...\n", watcher.name)
 	}
 }

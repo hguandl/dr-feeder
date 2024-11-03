@@ -143,7 +143,7 @@ func (watcher *akAnnounceWatcher) Produce(ch chan common.NotifyPayload) {
 	if watcher.update() {
 		log.Printf("New post from \"%s\"...\n", watcher.name)
 		ch <- watcher.parseContent()
-	} else {
+	} else if watcher.debugURL != "" {
 		log.Printf("Waiting for post \"%s\"...\n", watcher.name)
 	}
 }
