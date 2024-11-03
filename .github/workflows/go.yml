@@ -16,12 +16,11 @@ jobs:
       matrix:
         os: [macos, ubuntu, windows]
     runs-on: ${{ matrix.os }}-latest
-    permissions:
-      contents: write
     steps:
     - uses: actions/checkout@v4
 
     - name: Metadata
+      shell: bash
       run: |
         if ${{ startsWith(github.ref, 'refs/tags/v') }}; then
           echo "BUILD_VERSION=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_ENV"
@@ -35,16 +34,32 @@ jobs:
         go-version: 'stable'
 
     - name: Build
-      run: go build -v ./...
+      run: go build -o dr-feeder -trimpath -ldflags "-X main.version=${BUILD_VERSION} -s -w"
 
     - name: Test
       run: go test -v ./...
 
     - name: Package
+      shell: bash
       run: tar czf "dr-feeder-${BUILD_VERSION}-${{ matrix.os }}.tar.gz" "./dr-feeder" "./config.yaml"
 
-    - name: Create Release
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: ncipollo/release-action@v1
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
       with:
-        artifacts: "*.tar.gz"
+        name: dr-feeder-${{ matrix.os }}
+        path: ./*.tar.gz
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*.tar.gz"
