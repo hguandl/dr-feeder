@@ -204,11 +204,7 @@ func (watcher weiboWatcher) parseContent() (common.NotifyPayload, bool) {
 	}
 
 	picURL := weibo.PicURL
-	pageURL, err := watcher.weiboIntlShareURL(weibo.ID)
-	if err != nil {
-		log.Println(err)
-		pageURL = fmt.Sprintf("%s/%s", "https://m.weibo.cn/status", weibo.ID)
-	}
+	pageURL := fmt.Sprintf("%s/%s", "https://m.weibo.cn/status", weibo.ID)
 
 	var pageInfo pageInfo
 	mapstructure.Decode(weibo.PageInfo, &pageInfo)
