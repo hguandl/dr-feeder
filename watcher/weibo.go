@@ -84,6 +84,11 @@ func (watcher weiboWatcher) weiboIntlShareURL(weiboID string) (string, error) {
 		err = e
 	})
 
+	c.OnRequest(func(r *colly.Request) {
+		r.Headers.Set("Cookie", fmt.Sprintf("%v=%v; %v=%v",
+			"SUB", watcher.sub, "SUBP", watcher.subp))
+	})
+
 	c.OnResponse(func(r *colly.Response) {
 		var resp weiboIntlResp
 		err = json.Unmarshal(r.Body, &resp)
@@ -110,6 +115,11 @@ func (watcher *weiboWatcher) setup() error {
 
 	c.OnError(func(_ *colly.Response, e error) {
 		err = e
+	})
+
+	c.OnRequest(func(r *colly.Request) {
+		r.Headers.Set("Cookie", fmt.Sprintf("%v=%v; %v=%v",
+			"SUB", watcher.sub, "SUBP", watcher.subp))
 	})
 
 	c.OnResponse(func(r *colly.Response) {
