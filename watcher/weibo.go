@@ -139,6 +139,12 @@ func (watcher *weiboWatcher) setup() error {
 
 	c.Visit(watcher.homeAPI())
 	c.Wait()
+
+	if err != nil && (len(watcher.sub) == 0 || len(watcher.subp) == 0) {
+		log.Printf("Warning: silent error without cookies: %s", err)
+		return nil
+	}
+
 	return err
 }
 
