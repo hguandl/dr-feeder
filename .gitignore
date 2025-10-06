@@ -1,3 +1,6 @@
+### Database files ###
+bolt.db
+
 ### Testing files ###
 config_test.yaml
 testdir/

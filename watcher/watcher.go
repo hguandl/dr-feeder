@@ -30,6 +30,10 @@ type sirenConfig struct {
 	DebugURL string `mapstructure:"debug_url"`
 }
 
+type akWebConfig struct {
+	DebugURL string `mapstructure:"debug_url"`
+}
+
 func wrapDebug(debugURL string, debugMode bool) string {
 	if debugURL != "" {
 		if debugMode {
@@ -46,6 +50,7 @@ func wrapDebug(debugURL string, debugMode bool) string {
 func ParseWatchers(configs []map[string]interface{}, dataPath string, debugMode bool) ([]Watcher, error) {
 	var err error = nil
 	ret := make([]Watcher, len(configs))
+	dbPath := path.Join(dataPath, "bolt.db")
 
 	for idx, config := range configs {
 		watcherType, ok := config["type"].(string)
@@ -70,13 +75,19 @@ func ParseWatchers(configs []map[string]interface{}, dataPath string, debugMode 
 				err = fmt.Errorf("unsupported channel \"%v\"", akConfig.Channel)
 				break
 			}
-			ret[idx], err = NewAkAnnounceWatcher(path.Join(dataPath, "akanno.db"), wrapDebug(akConfig.DebugURL, debugMode))
+			ret[idx], err = NewAkAnnounceWatcher(dbPath, wrapDebug(akConfig.DebugURL, debugMode))
 		case "siren":
 			var akConfig sirenConfig
 			if err = mapstructure.Decode(config, &akConfig); err != nil {
 				break
 			}
-			ret[idx], err = NewSirenWatcher(path.Join(dataPath, "siren.db"), wrapDebug(akConfig.DebugURL, debugMode))
+			ret[idx], err = NewSirenWatcher(dbPath, wrapDebug(akConfig.DebugURL, debugMode))
+		case "akweb":
+			var akConfig akWebConfig
+			if err = mapstructure.Decode(config, &akConfig); err != nil {
+				break
+			}
+			ret[idx], err = NewAkWebWatcher(dbPath, wrapDebug(akConfig.DebugURL, debugMode))
 		default:
 			err = fmt.Errorf("unknown watcher #%d with type \"%s\"", idx, watcherType)
 		}
