@@ -32,11 +32,9 @@ type weiboWatcher struct {
 }
 
 // NewWeiboWatcher creates a Watcher of Arknights official Weibo.
-func NewWeiboWatcher(uid int64, sub string, subp string, debugURL string) (Watcher, error) {
+func NewWeiboWatcher(uid int64, debugURL string) (Watcher, error) {
 	watcher := new(weiboWatcher)
 	watcher.uid = uint64(uid)
-	watcher.sub = sub
-	watcher.subp = subp
 	watcher.cookieTime = time.Unix(0, 0)
 	watcher.updateTime = time.Now().UTC()
 	watcher.debugURL = debugURL
