@@ -27,6 +27,7 @@ type weiboWatcher struct {
 	latestMblog mblog
 	sub         string
 	subp        string
+	cookieTime  time.Time
 	debugURL    string
 }
 
@@ -36,6 +37,7 @@ func NewWeiboWatcher(uid int64, sub string, subp string, debugURL string) (Watch
 	watcher.uid = uint64(uid)
 	watcher.sub = sub
 	watcher.subp = subp
+	watcher.cookieTime = time.Unix(0, 0)
 	watcher.updateTime = time.Now().UTC()
 	watcher.debugURL = debugURL
 	err := watcher.setup()
@@ -73,6 +75,24 @@ func (watcher weiboWatcher) weiboIntlShareAPI(weiboID string) string {
 	)
 }
 
+func (watcher *weiboWatcher) setupCookies() func(*colly.Request) {
+	if time.Since(watcher.cookieTime) > time.Hour*24 {
+		cookies, err := GetWeiboVisitorCookies()
+		if err != nil {
+			log.Printf("Warning: failed to refresh Weibo visitor cookies: %v", err)
+		} else {
+			watcher.sub = cookies.SUB
+			watcher.subp = cookies.SUBP
+			watcher.cookieTime = time.Now()
+		}
+	}
+
+	return func(r *colly.Request) {
+		r.Headers.Set("Cookie", fmt.Sprintf("%v=%v; %v=%v",
+			"SUB", watcher.sub, "SUBP", watcher.subp))
+	}
+}
+
 func (watcher weiboWatcher) weiboIntlShareURL(weiboID string) (string, error) {
 	var err error = nil
 	var shareURL string
@@ -84,10 +104,7 @@ func (watcher weiboWatcher) weiboIntlShareURL(weiboID string) (string, error) {
 		err = e
 	})
 
-	c.OnRequest(func(r *colly.Request) {
-		r.Headers.Set("Cookie", fmt.Sprintf("%v=%v; %v=%v",
-			"SUB", watcher.sub, "SUBP", watcher.subp))
-	})
+	c.OnRequest(watcher.setupCookies())
 
 	c.OnResponse(func(r *colly.Response) {
 		var resp weiboIntlResp
@@ -117,10 +134,7 @@ func (watcher *weiboWatcher) setup() error {
 		err = e
 	})
 
-	c.OnRequest(func(r *colly.Request) {
-		r.Headers.Set("Cookie", fmt.Sprintf("%v=%v; %v=%v",
-			"SUB", watcher.sub, "SUBP", watcher.subp))
-	})
+	c.OnRequest(watcher.setupCookies())
 
 	c.OnResponse(func(r *colly.Response) {
 		var data indexData
@@ -159,10 +173,7 @@ func (watcher *weiboWatcher) update() bool {
 		err = e
 	})
 
-	c.OnRequest(func(r *colly.Request) {
-		r.Headers.Set("Cookie", fmt.Sprintf("%v=%v; %v=%v",
-			"SUB", watcher.sub, "SUBP", watcher.subp))
-	})
+	c.OnRequest(watcher.setupCookies())
 
 	c.OnResponse(func(r *colly.Response) {
 		var data cardData
