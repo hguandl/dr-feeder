@@ -25,8 +25,7 @@ type weiboWatcher struct {
 	containerID string
 	name        string
 	latestMblog mblog
-	sub         string
-	subp        string
+	cookies     WeiboVisitorCookies
 	cookieTime  time.Time
 	debugURL    string
 }
@@ -79,15 +78,17 @@ func (watcher *weiboWatcher) setupCookies() func(*colly.Request) {
 		if err != nil {
 			log.Printf("Warning: failed to refresh Weibo visitor cookies: %v", err)
 		} else {
-			watcher.sub = cookies.SUB
-			watcher.subp = cookies.SUBP
+			watcher.cookies = *cookies
 			watcher.cookieTime = time.Now()
 		}
 	}
 
 	return func(r *colly.Request) {
-		r.Headers.Set("Cookie", fmt.Sprintf("%v=%v; %v=%v",
-			"SUB", watcher.sub, "SUBP", watcher.subp))
+		r.Headers.Set("Cookie", fmt.Sprintf("%v=%v; %v=%v; %v=%v",
+			"XSRF-TOKEN", watcher.cookies.Token,
+			"SUB", watcher.cookies.SUB,
+			"SUBP", watcher.cookies.SUBP))
+		r.Headers.Set("Referer", "https://m.weibo.cn/")
 	}
 }
 
@@ -151,11 +152,6 @@ func (watcher *weiboWatcher) setup() error {
 
 	c.Visit(watcher.homeAPI())
 	c.Wait()
-
-	if err != nil && (len(watcher.sub) == 0 || len(watcher.subp) == 0) {
-		log.Printf("Warning: silent error without cookies: %s", err)
-		return nil
-	}
 
 	return err
 }

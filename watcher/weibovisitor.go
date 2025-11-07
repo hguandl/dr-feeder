@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand/v2"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -19,8 +20,9 @@ const userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" +
 
 // WeiboVisitorCookies holds the SUB and SUBP cookie values
 type WeiboVisitorCookies struct {
-	SUB  string
-	SUBP string
+	SUB   string
+	SUBP  string
+	Token string
 }
 
 // GetWeiboVisitorCookies fetches visitor cookies from Weibo
@@ -110,7 +112,7 @@ func sendGenVisitorRequest(client *http.Client, requestID string, refererURL str
 
 	cookies := &WeiboVisitorCookies{}
 
-	parsedURL, _ := url.Parse("https://visitor.passport.weibo.cn")
+	parsedURL, _ := url.Parse("https://m.weibo.cn")
 	for _, cookie := range client.Jar.Cookies(parsedURL) {
 		switch cookie.Name {
 		case "SUB":
@@ -122,7 +124,12 @@ func sendGenVisitorRequest(client *http.Client, requestID string, refererURL str
 
 	if cookies.SUB == "" || cookies.SUBP == "" {
 		return nil, fmt.Errorf("failed to extract SUB or SUBP cookies")
+	} else {
+		log.Printf("Obtained visitor cookies: SUB=%v, SUBP=%v", cookies.SUB, cookies.SUBP)
 	}
+
+	cookies.Token = fmt.Sprintf("%x", rand.IntN(0x1000000))
+	log.Printf("Generated XSRF-TOKEN: %v", cookies.Token)
 
 	return cookies, nil
 }
